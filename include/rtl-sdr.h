@@ -337,6 +337,27 @@ RTLSDR_API int rtlsdr_reset_buffer(rtlsdr_dev_t *dev);
 
 RTLSDR_API int rtlsdr_read_sync(rtlsdr_dev_t *dev, void *buf, int len, int *n_read);
 
+/*!
+ * Read data from the device in sync mode but with a timeout (in millisec).
+ *
+ * \param dev the device handle given by rtlsdr_open()
+ * \param buf the buffer where the data must be returned
+ * \param len number of bytes available in buf
+ * \param n_read number of bytes read are returned here
+ * \param timeout timeout (in milliseconds) to wait before giving up but there might be some partial data read, so check n_read even though -1 is returned
+ * \returns 0 on success (and populates <tt>transferred</tt>)
+ * \returns LIBUSB_ERROR_TIMEOUT if the transfer timed out (and populates
+ * <tt>transferred</tt>)
+ * \return LIBUSB_ERROR_PIPE if the endpoint halted
+ * \returns LIBUSB_ERROR_OVERFLOW if the device offered more data, see
+ * \ref libusb_packetoverflow
+ * \returns LIBUSB_ERROR_NO_DEVICE if the device has been disconnected
+ * \returns LIBUSB_ERROR_BUSY if called from event handling context
+ * \returns another LIBUSB_ERROR code on other failures
+ *
+ */
+RTLSDR_API int rtlsdr_read_timed_sync(rtlsdr_dev_t *dev, void *buf, int len, int *n_read, unsigned int timeout);
+
 typedef void(*rtlsdr_read_async_cb_t)(unsigned char *buf, uint32_t len, void *ctx);
 
 /*!

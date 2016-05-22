@@ -1691,6 +1691,15 @@ int rtlsdr_read_sync(rtlsdr_dev_t *dev, void *buf, int len, int *n_read)
 	return libusb_bulk_transfer(dev->devh, 0x81, buf, len, n_read, BULK_TIMEOUT);
 }
 
+int rtlsdr_read_timed_sync(rtlsdr_dev_t *dev, void *buf, int len, int *n_read,
+			   unsigned int timeout)
+{
+	if (!dev)
+		return -1;
+
+	return libusb_bulk_transfer(dev->devh, 0x81, buf, len, n_read, timeout);
+}
+
 static void LIBUSB_CALL _libusb_callback(struct libusb_transfer *xfer)
 {
 	rtlsdr_dev_t *dev = (rtlsdr_dev_t *)xfer->user_data;
